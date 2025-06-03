@@ -8,6 +8,8 @@ defmodule TaskManagerWeb.Router do
   # Other scopes may use custom stacks.
   scope "/api", TaskManagerWeb do
     pipe_through :api
+
+    post "/register", AuthController, :create
   end
 
 end

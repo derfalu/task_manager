@@ -4,6 +4,8 @@ defmodule TaskManager.Repo.Migrations.CreateUsers do
   def change do
     create table(:users) do
       add :email, :string
+      add :username, :string
+      add :password, :string
       add :password_hash, :string, null: false
 
       timestamps(type: :utc_datetime)

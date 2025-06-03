@@ -49,11 +49,12 @@ defmodule TaskManager.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Repo.insert()
-  end
+def register_user(attrs) do
+  %User{}
+  |> User.registration_changeset(attrs)
+  |> Repo.insert()
+end
+
 
 
   def authenticate_user(email, password) do
