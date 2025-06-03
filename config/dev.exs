@@ -2,7 +2,7 @@ import Config
 
 # Configure your database
 config :task_manager, TaskManager.Repo,
-  username: "postgres",
+  username: "derfal",
   password: "1234",
   hostname: "localhost",
   database: "task_manager_dev",
