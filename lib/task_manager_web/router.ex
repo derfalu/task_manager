@@ -10,6 +10,7 @@ defmodule TaskManagerWeb.Router do
     pipe_through :api
 
     post "/register", AuthController, :create
+    post "/login", AuthController, :login
   end
 
 end

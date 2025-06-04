@@ -57,16 +57,16 @@ end
 
 
 
-  def authenticate_user(email, password) do
-    user = Repo.get_by(User, email: email)
-
+  def authenticate_user(login, password) do
+    user = Repo.get_by(User, email: login) || Repo.get_by(User, username: login)
+    
     case user do
-      nil -> {:error, :user_not_found}
+      nil -> {:error, "user_not_found"}
       _ ->
         if Bcrypt.verify_pass(password, user.password_hash) do
           {:ok, user}
         else
-          {:error, :invalid_password}
+          {:error, "invalid_password"}
         end
     end
   end

@@ -26,4 +26,16 @@ defmodule TaskManagerWeb.AuthController do
         |> json(%{errors: errors})
     end
   end
+
+  def login(conn, %{"user" => %{"login" => login, "password" => password}}) do
+    case Accounts.authenticate_user(login, password) do
+      {:ok, user} ->
+        json(conn, %{message: "Успешный вход", user: %{id: user.id, email: user.email}})
+
+      {:error, msg} ->
+        conn
+        |> put_status(:unauthorized)
+        |> json(%{error: msg})
+    end
+  end
 end
