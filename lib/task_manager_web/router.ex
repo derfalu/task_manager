@@ -5,6 +5,11 @@ defmodule TaskManagerWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_auth do
+    plug :accepts, ["json"]
+    plug TaskManagerWeb.Plugs.AuthenticateUser
+  end
+
   # Other scopes may use custom stacks.
   scope "/api", TaskManagerWeb do
     pipe_through :api
@@ -12,5 +17,4 @@ defmodule TaskManagerWeb.Router do
     post "/register", AuthController, :create
     post "/login", AuthController, :login
   end
-
 end
