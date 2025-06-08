@@ -8,6 +8,8 @@ defmodule TaskManager.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      {Registry, keys: :unique, name: TaskManager.Registry},
+      TaskManager.UserTaskSupervisor,
       TaskManagerWeb.Telemetry,
       TaskManager.Repo,
       {DNSCluster, query: Application.get_env(:task_manager, :dns_cluster_query) || :ignore},

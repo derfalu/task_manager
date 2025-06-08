@@ -1,7 +1,7 @@
 defmodule TaskManagerWeb.Plugs.AuthPlug do
   import Plug.Conn
   alias TaskManager.Accounts
-  alias TaskManagerWeb.Auth.Token
+  alias TaskManager.Auth.Token
 
   @behaviour Plug
 
@@ -12,7 +12,7 @@ defmodule TaskManagerWeb.Plugs.AuthPlug do
   def call(conn, _opts) do
     with ["Bearer " <> token] <- get_req_header(conn, "authorization"),
          {:ok, %{"sub" => user_id}} <- Token.verify_token(token),
-         {:ok, user} <- Accounts.get_user_by_id(user_id) do
+         user <- Accounts.get_user!(user_id) do
       assign(conn, :current_user, user)
     else
       _ ->

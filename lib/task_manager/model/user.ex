@@ -1,4 +1,4 @@
-defmodule TaskManager.Accounts.User do
+defmodule TaskManager.UserModel do
   use Ecto.Schema
   import Ecto.Changeset
 

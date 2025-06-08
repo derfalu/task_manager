@@ -6,7 +6,7 @@ defmodule TaskManager.Accounts do
   import Ecto.Query, warn: false
   alias TaskManager.Repo
 
-  alias TaskManager.Accounts.User
+  alias TaskManager.UserModel
 
   @doc """
   Returns the list of users.
@@ -18,7 +18,7 @@ defmodule TaskManager.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    Repo.all(UserModel)
   end
 
   @doc """
@@ -35,7 +35,7 @@ defmodule TaskManager.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: Repo.get!(UserModel, id)
 
   @doc """
   Creates a user.
@@ -50,16 +50,31 @@ defmodule TaskManager.Accounts do
 
   """
 def register_user(attrs) do
-  %User{}
-  |> User.registration_changeset(attrs)
-  |> Repo.insert()
+  Repo.transaction(fn ->
+    with {:ok, user} <- Repo.insert(UserModel.registration_changeset(%UserModel{}, attrs)) do
+      # Создание дефолтной категории
+      %TaskManager.CategoryModel{}
+      |> TaskManager.CategoryModel.changeset(%{
+        name: "Основные",
+        user_id: user.id
+      })
+      |> Repo.insert!()
+
+      # Запуск GenServer (можно через Supervisor)
+      TaskManager.UserTaskSupervisor.start_user_server(user.id)
+
+      user
+    else
+      {:error, _} = err -> Repo.rollback(err)
+    end
+  end)
 end
 
 
 
   def authenticate_user(login, password) do
-    user = Repo.get_by(User, email: login) || Repo.get_by(User, username: login)
-    
+    user = Repo.get_by(UserModel, email: login) || Repo.get_by(UserModel, username: login)
+
     case user do
       nil -> {:error, "user_not_found"}
       _ ->
@@ -82,9 +97,9 @@ end
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs) do
+  def update_user(%UserModel{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> UserModel.changeset(attrs)
     |> Repo.update()
   end
 
@@ -100,7 +115,7 @@ end
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_user(%User{} = user) do
+  def delete_user(%UserModel{} = user) do
     Repo.delete(user)
   end
 
@@ -113,7 +128,7 @@ end
       %Ecto.Changeset{data: %User{}}
 
   """
-  def change_user(%User{} = user, attrs \\ %{}) do
-    User.changeset(user, attrs)
+  def change_user(%UserModel{} = user, attrs \\ %{}) do
+    UserModel.changeset(user, attrs)
   end
 end
