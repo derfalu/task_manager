@@ -2,12 +2,19 @@ defmodule TaskManager.UserTaskServer do
   use GenServer
   alias TaskManager.TasksServices
 
-  # ===== PUBLIC API =====
-
+  @doc """
+  Запускает сервер задач для указанного пользователя.
+  Этот сервер будет управлять состоянием задач и категорий для данного пользователя.
+  """
   def start_link(user_id) do
     GenServer.start_link(__MODULE__, user_id, name: via_tuple(user_id))
   end
 
+  @doc """
+  Возвращает кортеж для использования в Registry.
+  Этот кортеж позволяет идентифицировать сервер задач по ID пользователя.
+  Используется для регистрации и поиска сервера в Registry.
+  """
   def via_tuple(user_id) do
     {:via, Registry, {TaskManager.Registry, user_id}}
   end
