@@ -61,7 +61,8 @@ defmodule TaskManager.MixProject do
       {:bandit, "~> 1.5"},
       {:bcrypt_elixir, "~> 3.0"},
       {:cors_plug, "~> 3.0"},
-      {:joken, "~> 2.6"}
+      {:joken, "~> 2.6"},
+      {:finch, "~> 0.16"}
     ]
   end
 

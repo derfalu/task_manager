@@ -14,6 +14,7 @@ defmodule TaskManager.Application do
       TaskManager.Repo,
       {DNSCluster, query: Application.get_env(:task_manager, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: TaskManager.PubSub},
+      {Finch, name: TaskManagerFinch},
       # Start a worker by calling: TaskManager.Worker.start_link(arg)
       # {TaskManager.Worker, arg},
       # Start to serve requests, typically the last entry

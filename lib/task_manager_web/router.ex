@@ -36,4 +36,10 @@ defmodule TaskManagerWeb.Router do
     put "/:id", CategoryController, :update
     delete "/:id", CategoryController, :delete
   end
+
+  scope "/api/chat", TaskManagerWeb do
+    pipe_through :api_auth
+
+    post "/", ChatController, :chat
+  end
 end
